@@ -30,12 +30,25 @@ Column {
     spacing: 18
 
     property int firstColumnWidth: 0
+    property alias scoreInversionChecked: scoreInversionEnable.checked
 
+    signal scoreInversionRequested(var newValue)
     signal colorChangeRequested(var newColor, var propertyType)
 
     StyledTextLabel {
         text: qsTrc("appshell", "UI colors")
         font: ui.theme.bodyBoldFont
+    }
+
+    CheckBox {
+        id: scoreInversionEnable
+
+        text: qsTrc("appshell", "Invert score colors")
+
+        onClicked: {
+            checked = !checked
+            scoreInversionRequested(checked)
+        }
     }
 
     GridLayout {

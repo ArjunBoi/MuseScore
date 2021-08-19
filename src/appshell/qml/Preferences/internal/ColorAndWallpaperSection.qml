@@ -39,6 +39,8 @@ Column {
 
     property int firstColumnWidth: 0
 
+    property alias opacityOverride: gridSection.opacity
+
     signal useColorChangeRequested(var newValue)
     signal colorChangeRequested(var newColor)
     signal wallpaperPathChangeRequested(var newWallpaperPath)
@@ -47,11 +49,14 @@ Column {
 
     StyledTextLabel {
         id: titleLabel
+        opacity: 1.0
 
         font: ui.theme.bodyBoldFont
     }
 
     GridLayout {
+        id: gridSection
+
         rows: 2
         columns: 2
 

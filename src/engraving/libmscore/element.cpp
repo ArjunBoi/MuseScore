@@ -127,7 +127,7 @@
 #endif
 
 #include "log.h"
-#define LOG_PROP() if (0) LOGD()
+#define LOG_PROP() if (0) LOGD ()
 
 using namespace mu;
 
@@ -216,7 +216,7 @@ Element::Element(Score* s, ElementFlags f, mu::score::AccessibleElement* access)
 {
     _flags         = f;
     _track         = -1;
-    _color         = engravingConfiguration()->defaultColor();
+    _color         = mu::draw::Color();
     _mag           = 1.0;
     _tag           = 1;
     _z             = -1;
@@ -483,7 +483,7 @@ Fraction Element::beat() const
     tsm->tickValues(tick().ticks(), &bar, &beat, &ticks);
     int ticksB = ticks_beat(tsm->timesig(tick().ticks()).timesig().denominator());
 
-    Fraction complexFraction((++beat * ticksB) + ticks, ticksB);
+    Fraction complexFraction((++beat* ticksB) + ticks, ticksB);
     return complexFraction.reduced();
 }
 
@@ -495,6 +495,11 @@ Part* Element::part() const
 {
     Staff* s = staff();
     return s ? s->part() : 0;
+}
+
+draw::Color Element::color() const
+{
+    return _color.isValid() ? _color : engravingConfiguration()->defaultColor();
 }
 
 //---------------------------------------------------------
@@ -513,10 +518,13 @@ mu::draw::Color Element::curColor() const
 mu::draw::Color Element::curColor(bool isVisible) const
 {
     return curColor(isVisible, color());
+    //return curColor(isVisible, engravingConfiguration()->defaultColor());
 }
 
 mu::draw::Color Element::curColor(bool isVisible, mu::draw::Color normalColor) const
 {
+    //return engravingConfiguration()->defaultColor(); //testing
+
     // the default element color is always interpreted as black in printing
     if (score() && score()->printing()) {
         return (normalColor == engravingConfiguration()->defaultColor()) ? mu::draw::Color::black : normalColor;
@@ -547,6 +555,7 @@ mu::draw::Color Element::curColor(bool isVisible, mu::draw::Color normalColor) c
         return engravingConfiguration()->invisibleColor();
     }
     return normalColor;
+    //return engravingConfiguration()->defaultColor();
 }
 
 //---------------------------------------------------------
@@ -1368,22 +1377,22 @@ void paintElements(mu::draw::Painter& painter, const QList<Element*>& elements)
     QList<Ms::Element*> sortedElements = elements;
 
     std::sort(sortedElements.begin(), sortedElements.end(), [](Ms::Element* e1, Ms::Element* e2) {
-        if (e1->z() == e2->z()) {
-            if (e1->selected()) {
-                return false;
-            } else if (e1->visible()) {
-                return false;
-            } else if (e2->selected()) {
-                return true;
-            } else if (e1->visible()) {
-                return true;
+            if (e1->z() == e2->z()) {
+                if (e1->selected()) {
+                    return false;
+                } else if (e1->visible()) {
+                    return false;
+                } else if (e2->selected()) {
+                    return true;
+                } else if (e1->visible()) {
+                    return true;
+                }
+
+                return e1->track() > e2->track();
             }
 
-            return e1->track() > e2->track();
-        }
-
-        return e1->z() < e2->z();
-    });
+            return e1->z() < e2->z();
+        });
 
     for (const Element* element : sortedElements) {
         if (!element->isInteractionAvailable()) {
