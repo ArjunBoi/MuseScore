@@ -133,6 +133,10 @@ PreferencesPage {
                     firstColumnWidth: prv.firstColumnWidth
                     scoreInversionChecked: appearanceModel.invertScoreColor
 
+                    onChangePageColorRequested: {
+                        appearanceModel.loadAppropriateForegroundColor()
+                    }
+
                     onScoreInversionRequested: {
                         appearanceModel.invertScoreColor = newValue
                     }

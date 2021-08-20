@@ -99,6 +99,7 @@ public:
     Q_INVOKABLE bool enableHighContrastChecked();
     Q_INVOKABLE void loadLastUsedGeneralTheme();
     Q_INVOKABLE void loadLastUsedHighContrastTheme();
+    Q_INVOKABLE void loadAppropriateForegroundColor();
     Q_INVOKABLE void setNewColor(const QColor& newColor, ColorType colorType);
     Q_INVOKABLE QStringList allFonts() const;
     Q_INVOKABLE QString wallpaperPathFilter() const;

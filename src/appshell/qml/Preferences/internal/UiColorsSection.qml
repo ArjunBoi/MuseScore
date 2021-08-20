@@ -32,6 +32,7 @@ Column {
     property int firstColumnWidth: 0
     property alias scoreInversionChecked: scoreInversionEnable.checked
 
+    signal changePageColorRequested()
     signal scoreInversionRequested(var newValue)
     signal colorChangeRequested(var newColor, var propertyType)
 
@@ -47,7 +48,8 @@ Column {
 
         onClicked: {
             checked = !checked
-            scoreInversionRequested(checked)
+            root.scoreInversionRequested(checked)
+            root.changePageColorRequested()
         }
     }
 
